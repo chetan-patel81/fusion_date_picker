@@ -202,8 +202,8 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
             padding: widget.padding,
             child: GestureDetector(
               onDoubleTap: () {
-                if (displayedDate != null) {
-                  _handleDoubleTap(displayedDate);
+                if (selectedDate != null) {
+                  _handleDoubleTap(selectedDate);
                 }
               },
               child: Builder(builder: (context) {
