@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fusion_date_picker/fusion_date_picker.dart';
 import 'fusion_range_days_picker.dart';
-
+import 'package:get/get.dart';
 class FusionRangeDatePickerController extends GetxController {
   final FusionRangeDatePicker widget;
 

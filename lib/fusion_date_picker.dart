@@ -1,4 +1,4 @@
-library fusion_date_picker;
+library;
 
 export 'src/date/fusion_date_picker.dart';
 export 'src/date/show_fusion_date_picker_dialog.dart';
@@ -12,5 +12,4 @@ export 'src/shared/types.dart';
 export 'src/shared/fusion_date_utils_x.dart';
 export 'src/shared/device_orientation_builder.dart';
 export 'src/shared/fusion_header.dart';
-export 'package:get/get.dart';
 export 'src/shared/fusion_picker_grid_delegate.dart';
