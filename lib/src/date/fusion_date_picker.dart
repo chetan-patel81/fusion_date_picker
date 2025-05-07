@@ -98,6 +98,9 @@ class FusionDatePicker extends StatefulWidget {
     this.previousPageSemanticLabel,
     this.nextPageSemanticLabel,
     this.disabledDayPredicate,
+    this.onOk,
+    this.onCancel,
+    this.showOkCancel = true,
   }) {
     assert(!minDate.isAfter(maxDate), "minDate can't be after maxDate");
   }
@@ -129,6 +132,9 @@ class FusionDatePicker extends StatefulWidget {
   final String? previousPageSemanticLabel;
   final String? nextPageSemanticLabel;
   final DatePredicate? disabledDayPredicate;
+  final VoidCallback? onOk; // Callback for OK button
+  final VoidCallback? onCancel; // Callback for Cancel button
+  final bool showOkCancel; // Control to show/hide buttons
 
   @override
   State<FusionDatePicker> createState() => _DatePickerGetXState();
@@ -149,6 +155,13 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
     super.didUpdateWidget(oldWidget);
     controller.updateFromWidget(oldWidget, widget);
   }
+  void _handleDoubleTap(DateTime date) {
+    controller.updateDisplayedDate(date);
+    controller.updateSelectedDate(date);
+    widget.onDateSelected?.call(date);
+    widget.onOk?.call(); // Call the OK callback
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,123 +169,155 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
       final pickerType = controller.pickerType.value;
       final displayedDate = controller.displayedDate.value;
       final selectedDate = controller.selectedDate.value;
-      switch (pickerType) {
-        case PickerType.days:
-          return Padding(
-            padding: widget.padding,
-            child: FusionDaysPicker(
-              centerLeadingDate: widget.centerLeadingDate,
-              initialDate: displayedDate,
-              selectedDate: selectedDate,
-              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
-              maxDate: DateUtils.dateOnly(widget.maxDate),
-              minDate: DateUtils.dateOnly(widget.minDate),
-              daysOfTheWeekTextStyle: widget.daysOfTheWeekTextStyle,
-              enabledCellsTextStyle: widget.enabledCellsTextStyle,
-              enabledCellsDecoration: widget.enabledCellsDecoration,
-              disabledCellsTextStyle: widget.disabledCellsTextStyle,
-              disabledCellsDecoration: widget.disabledCellsDecoration,
-              currentDateDecoration: widget.currentDateDecoration,
-              currentDateTextStyle: widget.currentDateTextStyle,
-              selectedCellDecoration: widget.selectedCellDecoration,
-              selectedCellTextStyle: widget.selectedCellTextStyle,
-              slidersColor: widget.slidersColor,
-              slidersSize: widget.slidersSize,
-              leadingDateTextStyle: widget.leadingDateTextStyle,
-              splashColor: widget.splashColor,
-              highlightColor: widget.highlightColor,
-              splashRadius: widget.splashRadius,
-              previousPageSemanticLabel: widget.previousPageSemanticLabel,
-              nextPageSemanticLabel: widget.nextPageSemanticLabel,
-              disabledDayPredicate: widget.disabledDayPredicate,
-              onLeadingDateTap: () {
-                controller.updatePickerType(PickerType.months);
-              },
-              onDateSelected: (selectedDate) {
-                controller.updateDisplayedDate(selectedDate);
-                controller.updateSelectedDate(selectedDate);
-                widget.onDateSelected?.call(selectedDate);
-              },
+
+      return Column(
+        children: [
+          Expanded(
+              child: Padding(
+                  padding: widget.padding,
+                  child: GestureDetector(
+                    onDoubleTap: () => _handleDoubleTap(selectedDate!),
+                    child: Builder(builder: (context) {
+                      switch (pickerType) {
+                        case PickerType.days:
+                          return Padding(
+                            padding: widget.padding,
+                            child: FusionDaysPicker(
+                              centerLeadingDate: widget.centerLeadingDate,
+                              initialDate: displayedDate,
+                              selectedDate: selectedDate,
+                              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
+                              maxDate: DateUtils.dateOnly(widget.maxDate),
+                              minDate: DateUtils.dateOnly(widget.minDate),
+                              daysOfTheWeekTextStyle: widget.daysOfTheWeekTextStyle,
+                              enabledCellsTextStyle: widget.enabledCellsTextStyle,
+                              enabledCellsDecoration: widget.enabledCellsDecoration,
+                              disabledCellsTextStyle: widget.disabledCellsTextStyle,
+                              disabledCellsDecoration: widget.disabledCellsDecoration,
+                              currentDateDecoration: widget.currentDateDecoration,
+                              currentDateTextStyle: widget.currentDateTextStyle,
+                              selectedCellDecoration: widget.selectedCellDecoration,
+                              selectedCellTextStyle: widget.selectedCellTextStyle,
+                              slidersColor: widget.slidersColor,
+                              slidersSize: widget.slidersSize,
+                              leadingDateTextStyle: widget.leadingDateTextStyle,
+                              splashColor: widget.splashColor,
+                              highlightColor: widget.highlightColor,
+                              splashRadius: widget.splashRadius,
+                              previousPageSemanticLabel: widget.previousPageSemanticLabel,
+                              nextPageSemanticLabel: widget.nextPageSemanticLabel,
+                              disabledDayPredicate: widget.disabledDayPredicate,
+                              onLeadingDateTap: () {
+                                controller.updatePickerType(PickerType.months);
+                              },
+                              onDateSelected: (selectedDate) {
+                                controller.updateDisplayedDate(selectedDate);
+                                controller.updateSelectedDate(selectedDate);
+                                widget.onDateSelected?.call(selectedDate);
+                              },
+                            ),
+                          );
+                        case PickerType.months:
+                          return Padding(
+                            padding: widget.padding,
+                            child: FusionMonthPicker(
+                              centerLeadingDate: widget.centerLeadingDate,
+                              initialDate: displayedDate,
+                              selectedDate: selectedDate,
+                              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
+                              maxDate: DateUtils.dateOnly(widget.maxDate),
+                              minDate: DateUtils.dateOnly(widget.minDate),
+                              currentDateDecoration: widget.currentDateDecoration,
+                              currentDateTextStyle: widget.currentDateTextStyle,
+                              disabledCellsDecoration: widget.disabledCellsDecoration,
+                              disabledCellsTextStyle: widget.disabledCellsTextStyle,
+                              enabledCellsDecoration: widget.enabledCellsDecoration,
+                              enabledCellsTextStyle: widget.enabledCellsTextStyle,
+                              selectedCellDecoration: widget.selectedCellDecoration,
+                              selectedCellTextStyle: widget.selectedCellTextStyle,
+                              slidersColor: widget.slidersColor,
+                              slidersSize: widget.slidersSize,
+                              leadingDateTextStyle: widget.leadingDateTextStyle,
+                              splashColor: widget.splashColor,
+                              highlightColor: widget.highlightColor,
+                              splashRadius: widget.splashRadius,
+                              previousPageSemanticLabel: widget.previousPageSemanticLabel,
+                              nextPageSemanticLabel: widget.nextPageSemanticLabel,
+                              onLeadingDateTap: () {
+                                controller.updatePickerType(PickerType.years);
+                              },
+                              onDateSelected: (selectedMonth) {
+                                final clampedSelectedMonth = FusionDateUtilsX.clampDateToRange(
+                                  min: widget.minDate,
+                                  max: widget.maxDate,
+                                  date: selectedMonth,
+                                );
+                                controller.updateDisplayedDate(clampedSelectedMonth);
+                                controller.updatePickerType(PickerType.days);
+                              },
+                            ),
+                          );
+                        case PickerType.years:
+                          return Padding(
+                            padding: widget.padding,
+                            child: FusionYearsPicker(
+                              centerLeadingDate: widget.centerLeadingDate,
+                              initialDate: displayedDate,
+                              selectedDate: selectedDate,
+                              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
+                              maxDate: DateUtils.dateOnly(widget.maxDate),
+                              minDate: DateUtils.dateOnly(widget.minDate),
+                              currentDateDecoration: widget.currentDateDecoration,
+                              currentDateTextStyle: widget.currentDateTextStyle,
+                              disabledCellsDecoration: widget.disabledCellsDecoration,
+                              disabledCellsTextStyle: widget.disabledCellsTextStyle,
+                              enabledCellsDecoration: widget.enabledCellsDecoration,
+                              enabledCellsTextStyle: widget.enabledCellsTextStyle,
+                              selectedCellDecoration: widget.selectedCellDecoration,
+                              selectedCellTextStyle: widget.selectedCellTextStyle,
+                              slidersColor: widget.slidersColor,
+                              slidersSize: widget.slidersSize,
+                              leadingDateTextStyle: widget.leadingDateTextStyle,
+                              splashColor: widget.splashColor,
+                              highlightColor: widget.highlightColor,
+                              splashRadius: widget.splashRadius,
+                              previousPageSemanticLabel: widget.previousPageSemanticLabel,
+                              nextPageSemanticLabel: widget.nextPageSemanticLabel,
+                              onDateSelected: (selectedYear) {
+                                final clampedSelectedYear = FusionDateUtilsX.clampDateToRange(
+                                  min: widget.minDate,
+                                  max: widget.maxDate,
+                                  date: selectedYear,
+                                );
+                                controller.updateDisplayedDate(clampedSelectedYear);
+                                controller.updatePickerType(PickerType.months);
+                              },
+                            ),
+                          );
+                      }
+                    }),
+                  ))),
+          if (widget.showOkCancel)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    widget.onCancel?.call(); // Call the cancel callback
+                  },
+                  child: Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    widget.onOk?.call(); // Call the OK callback
+
+                  },
+                  child: Text('OK'),
+                ),
+              ],
             ),
-          );
-        case PickerType.months:
-          return Padding(
-            padding: widget.padding,
-            child: FusionMonthPicker(
-              centerLeadingDate: widget.centerLeadingDate,
-              initialDate: displayedDate,
-              selectedDate: selectedDate,
-              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
-              maxDate: DateUtils.dateOnly(widget.maxDate),
-              minDate: DateUtils.dateOnly(widget.minDate),
-              currentDateDecoration: widget.currentDateDecoration,
-              currentDateTextStyle: widget.currentDateTextStyle,
-              disabledCellsDecoration: widget.disabledCellsDecoration,
-              disabledCellsTextStyle: widget.disabledCellsTextStyle,
-              enabledCellsDecoration: widget.enabledCellsDecoration,
-              enabledCellsTextStyle: widget.enabledCellsTextStyle,
-              selectedCellDecoration: widget.selectedCellDecoration,
-              selectedCellTextStyle: widget.selectedCellTextStyle,
-              slidersColor: widget.slidersColor,
-              slidersSize: widget.slidersSize,
-              leadingDateTextStyle: widget.leadingDateTextStyle,
-              splashColor: widget.splashColor,
-              highlightColor: widget.highlightColor,
-              splashRadius: widget.splashRadius,
-              previousPageSemanticLabel: widget.previousPageSemanticLabel,
-              nextPageSemanticLabel: widget.nextPageSemanticLabel,
-              onLeadingDateTap: () {
-                controller.updatePickerType(PickerType.years);
-              },
-              onDateSelected: (selectedMonth) {
-                final clampedSelectedMonth = FusionDateUtilsX.clampDateToRange(
-                  min: widget.minDate,
-                  max: widget.maxDate,
-                  date: selectedMonth,
-                );
-                controller.updateDisplayedDate(clampedSelectedMonth);
-                controller.updatePickerType(PickerType.days);
-              },
-            ),
-          );
-        case PickerType.years:
-          return Padding(
-            padding: widget.padding,
-            child: FusionYearsPicker(
-              centerLeadingDate: widget.centerLeadingDate,
-              initialDate: displayedDate,
-              selectedDate: selectedDate,
-              currentDate: DateUtils.dateOnly(widget.currentDate ?? DateTime.now()),
-              maxDate: DateUtils.dateOnly(widget.maxDate),
-              minDate: DateUtils.dateOnly(widget.minDate),
-              currentDateDecoration: widget.currentDateDecoration,
-              currentDateTextStyle: widget.currentDateTextStyle,
-              disabledCellsDecoration: widget.disabledCellsDecoration,
-              disabledCellsTextStyle: widget.disabledCellsTextStyle,
-              enabledCellsDecoration: widget.enabledCellsDecoration,
-              enabledCellsTextStyle: widget.enabledCellsTextStyle,
-              selectedCellDecoration: widget.selectedCellDecoration,
-              selectedCellTextStyle: widget.selectedCellTextStyle,
-              slidersColor: widget.slidersColor,
-              slidersSize: widget.slidersSize,
-              leadingDateTextStyle: widget.leadingDateTextStyle,
-              splashColor: widget.splashColor,
-              highlightColor: widget.highlightColor,
-              splashRadius: widget.splashRadius,
-              previousPageSemanticLabel: widget.previousPageSemanticLabel,
-              nextPageSemanticLabel: widget.nextPageSemanticLabel,
-              onDateSelected: (selectedYear) {
-                final clampedSelectedYear = FusionDateUtilsX.clampDateToRange(
-                  min: widget.minDate,
-                  max: widget.maxDate,
-                  date: selectedYear,
-                );
-                controller.updateDisplayedDate(clampedSelectedYear);
-                controller.updatePickerType(PickerType.months);
-              },
-            ),
-          );
-      }
+        ],
+      );
     });
   }
 }
