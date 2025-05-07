@@ -194,7 +194,8 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
       final displayedDate = controller.displayedDate.value;
       final selectedDate = controller.selectedDate.value;
 
-      return Column(
+      return Column(             crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
             child: Padding(
