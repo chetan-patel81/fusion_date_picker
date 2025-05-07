@@ -16,6 +16,7 @@ class FusionDaysView extends StatelessWidget {
     required this.minDate,
     required this.maxDate,
     this.selectedDate,
+    this.onDoubleTap,
     required this.displayedMonth,
     required this.daysOfTheWeekTextStyle,
     required this.enabledCellsTextStyle,
@@ -58,6 +59,7 @@ class FusionDaysView extends StatelessWidget {
 
   /// Called when the user picks a day.
   final ValueChanged<DateTime> onChanged;
+  final ValueChanged<DateTime>? onDoubleTap;
 
   /// The earliest date the user is permitted to pick.
   ///
@@ -226,6 +228,11 @@ class FusionDaysView extends StatelessWidget {
         } else {
           dayWidget = InkResponse(
             onTap: () => onChanged(dayToBuild),
+            onDoubleTap: () {
+              if (onDoubleTap != null) {
+                onDoubleTap!(dayToBuild); // Ensure onDoubleTap is not null
+              }
+            },
             radius: splashRadius,
             splashColor: splashColor,
             highlightColor: highlightColor,

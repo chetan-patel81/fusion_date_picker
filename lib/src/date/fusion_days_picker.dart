@@ -14,9 +14,9 @@ class FusionDaysPickerController extends GetxController {
   final DateTime? currentDate;
   final DateTime? selectedDate;
   final ValueChanged<DateTime>? onDateSelected;
+  final ValueChanged<DateTime>? onDoubleTap;
   final VoidCallback? onLeadingDateTap;
   final DatePredicate? disabledDayPredicate;
-
   final TextStyle? daysOfTheWeekTextStyle;
   final TextStyle? enabledCellsTextStyle;
   final BoxDecoration enabledCellsDecoration;
@@ -35,7 +35,7 @@ class FusionDaysPickerController extends GetxController {
   final bool centerLeadingDate;
   final String? previousPageSemanticLabel;
   final String? nextPageSemanticLabel;
-
+  final bool showOkCancel;
   late Rx<DateTime?> displayedMonth;
   late Rx<DateTime?> selectedDay;
   late PageController pageController;
@@ -57,6 +57,8 @@ class FusionDaysPickerController extends GetxController {
     this.selectedCellDecoration,
     this.onLeadingDateTap,
     this.onDateSelected,
+    this.onDoubleTap,
+    this.showOkCancel = true,
     this.leadingDateTextStyle,
     this.slidersColor,
     this.slidersSize,
@@ -89,9 +91,28 @@ class FusionDaysPickerController extends GetxController {
     displayedMonth.value = monthDate;
   }
 
-  void onSelectedDay(DateTime value) {
+  // void onSelectedDay(DateTime value) {
+  //   selectedDay.value = value;
+  //   onDateSelected?.call(value);
+  // }
+
+  /// Called when a day is single-tapped.
+  void onUserSelectedDay(DateTime value) {
     selectedDay.value = value;
+
+    if (!showOkCancel) {
+      // Immediate confirmation if there are no OK/Cancel buttons
+      onDateSelected?.call(value);
+    }
+    // else: only update selection (tentative), actual confirmation on OK/double-tap
+  }
+
+  /// Called when a day is double-tapped (always confirms immediately).
+  void onUserDoubleTapDay(DateTime value) {
+    selectedDay.value = value;
+    // Always confirm immediately on double tap
     onDateSelected?.call(value);
+    onDoubleTap?.call(value); // This can let the parent trigger onOk too if desired
   }
 
   void jumpToInitialPage(DateTime? newInitialDate) {
@@ -137,6 +158,8 @@ class FusionDaysPicker extends StatelessWidget {
     this.selectedCellDecoration,
     this.onLeadingDateTap,
     this.onDateSelected,
+    this.onDoubleTap,
+    required this.showOkCancel ,
     this.leadingDateTextStyle,
     this.slidersColor,
     this.slidersSize,
@@ -147,6 +170,7 @@ class FusionDaysPicker extends StatelessWidget {
     this.previousPageSemanticLabel = 'Previous Day',
     this.nextPageSemanticLabel = 'Next Day',
     this.disabledDayPredicate,
+
   }) {
     assert(!minDate.isAfter(maxDate), "minDate can't be after maxDate");
     assert(
@@ -173,6 +197,8 @@ class FusionDaysPicker extends StatelessWidget {
   final DateTime? currentDate;
   final DateTime? selectedDate;
   final ValueChanged<DateTime>? onDateSelected;
+  final ValueChanged<DateTime>? onDoubleTap;
+  final bool showOkCancel;
   final DateTime minDate;
   final DateTime maxDate;
   final VoidCallback? onLeadingDateTap;
@@ -205,6 +231,7 @@ class FusionDaysPicker extends StatelessWidget {
         initialDate: initialDate,
         currentDate: currentDate,
         selectedDate: selectedDate,
+        onDoubleTap: onDoubleTap,
         daysOfTheWeekTextStyle: daysOfTheWeekTextStyle,
         enabledCellsTextStyle: enabledCellsTextStyle,
         enabledCellsDecoration: enabledCellsDecoration,
@@ -380,7 +407,8 @@ class FusionDaysPicker extends StatelessWidget {
                         splashColor: splashColorLocal,
                         splashRadius: splashRadius,
                         disabledDayPredicate: disabledDayPredicate,
-                        onChanged: controller.onSelectedDay,
+                        onChanged: controller.onUserSelectedDay,
+                        onDoubleTap: controller.onUserDoubleTapDay,
                       );
                     },
                   ),
