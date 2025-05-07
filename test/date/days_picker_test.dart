@@ -33,6 +33,7 @@ void main() {
               slidersSize: 20,
               splashColor: Colors.black,
               highlightColor: Colors.black,
+              showOkCancel: true,
             ),
           ),
         ),
@@ -54,7 +55,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: FusionDaysPicker(
+            child: FusionDaysPicker( showOkCancel: true,
               currentDate: initialDate,
               initialDate: initialDate,
               minDate: minDate,
@@ -110,7 +111,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: FusionDaysPicker(
+            child: FusionDaysPicker( showOkCancel: true,
               currentDate: initialDate,
               initialDate: initialDate,
               minDate: minDate,
@@ -172,7 +173,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Material(
-            child: FusionDaysPicker(
+            child: FusionDaysPicker( showOkCancel: true,
               currentDate: initialDate,
               initialDate: initialDate,
               minDate: minDate,
@@ -234,7 +235,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -311,7 +312,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -388,7 +389,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -468,7 +469,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -531,7 +532,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -580,7 +581,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 currentDate: initialDate,
                 initialDate: initialDate,
                 minDate: minDate,
@@ -641,7 +642,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Material(
-              child: FusionDaysPicker(
+              child: FusionDaysPicker( showOkCancel: true,
                 minDate: minDate,
                 maxDate: maxDate,
               ),
