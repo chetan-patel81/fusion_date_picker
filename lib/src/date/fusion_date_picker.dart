@@ -160,11 +160,12 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
 
   // Double tap: Confirm selection immediately.
   void _handleDoubleTap(DateTime date) {
-    controller.updateDisplayedDate(date);
-    controller.updateSelectedDate(date);
-    widget.onDateSelected?.call(date);
-    widget.onOk?.call();
+
     if (widget.onDoubleTap != null) {
+      controller.updateDisplayedDate(date);
+      controller.updateSelectedDate(date);
+      widget.onDateSelected?.call(date);
+      widget.onOk?.call();
       widget.onDoubleTap!.call(date);
     }
   }
