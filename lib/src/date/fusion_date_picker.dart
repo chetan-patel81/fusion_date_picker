@@ -74,6 +74,7 @@ class FusionDatePicker extends StatefulWidget {
     required this.maxDate,
     required this.minDate,
     this.onDateSelected,
+    this.onDoubleTap,
     this.initialDate,
     this.selectedDate,
     this.currentDate,
@@ -109,6 +110,7 @@ class FusionDatePicker extends StatefulWidget {
   final DateTime? currentDate;
   final DateTime? selectedDate;
   final ValueChanged<DateTime>? onDateSelected;
+  final ValueChanged<DateTime>? onDoubleTap;
   final DateTime minDate;
   final DateTime maxDate;
   final PickerType initialPickerType;
@@ -162,6 +164,9 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
     controller.updateSelectedDate(date);
     widget.onDateSelected?.call(date);
     widget.onOk?.call();
+    if (widget.onDoubleTap != null) {
+      widget.onDoubleTap!.call(date);
+    }
   }
 
   // Single tap: only update controller state, wait for OK.
@@ -237,7 +242,9 @@ class _DatePickerGetXState extends State<FusionDatePicker> {
                       onLeadingDateTap: () {
                         controller.updatePickerType(PickerType.months);
                       },
-                      onDoubleTap: _handleDoubleTap,
+                      onDoubleTap: widget.onDoubleTap != null
+                          ? _handleDoubleTap
+                          : null,
                       onDateSelected: _handleSingleTap,
               showOkCancel: widget.showOkCancel,
                     ),
